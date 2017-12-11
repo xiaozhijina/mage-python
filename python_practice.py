@@ -37,3 +37,4 @@ types = ['红桃','方块','黑桃','梅花']
 cards = [(i,k) for i in types for j,k in s1.items()]
 for card in cards:
     print(card)
+######################################
