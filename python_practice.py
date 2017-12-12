@@ -38,3 +38,22 @@ cards = [(i,k) for i in types for j,k in s1.items()]
 for card in cards:
     print(card)
 ######################################
+# 快速统计字符串每个元素出现的次数： 如"abcevaefegsgdghfdefavbdr"， “a”:x,"b":y
+### 方法一###########
+strings = "abcevaefegsgdghfdefavbdr"
+
+for i in set(strings):
+    print('{}:{}'.format(i,strings.count(i)),end=' ')
+print()
+##########方法二 #####################
+from collections import Counter
+print(Counter(strings))
+####################方法三 ####################
+dict = {}
+
+for i in strings:
+    if i not in dict:
+        dict[i] = 1
+    else:
+        dict[i] += 1
+print(dict)
