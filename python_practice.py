@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 #2017-12-11 21:04:00
-#打出52张纸牌
+#第一天 ：打出52张纸牌
 
 ###  test 1 ############
 
@@ -38,7 +38,7 @@ cards = [(i,k) for i in types for j,k in s1.items()]
 for card in cards:
     print(card)
 ######################################
-# 快速统计字符串每个元素出现的次数： 如"abcevaefegsgdghfdefavbdr"， “a”:x,"b":y
+#第二天： 快速统计字符串每个元素出现的次数： 如"abcevaefegsgdghfdefavbdr"， “a”:x,"b":y
 ### 方法一###########
 strings = "abcevaefegsgdghfdefavbdr"
 
@@ -57,3 +57,21 @@ for i in strings:
     else:
         dict[i] += 1
 print(dict)
+# 第三天： 快速统计字符串每个元素出现的次数： 如"abcevaefegsgdghfdefavbdr"， “a”:x,"b":y，并降序排序，找出前三名。
+############ 方法一 ##################
+strings = "abcevaefegsgdghfdefavbdr"
+dict = {}
+
+for i in strings:
+    if i not in dict:
+        dict[i] = 1
+    else:
+        dict[i] += 1
+print(dict)
+vob = sorted(dict.items(),key=lambda x:x[-1],reverse=True)
+for i in range(3):
+    print(vob[i])
+############## 方法二 ###########################
+strings = "abcevaefegsgdghfdefavbdr"
+from collections import Counter
+print(Counter(strings).most_common(3))  
