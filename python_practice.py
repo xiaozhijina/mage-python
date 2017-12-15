@@ -87,3 +87,37 @@ print(Counter(strings).most_common(3))
 打印用户第一个行数据为用户信息描述，从第二行开始为用户数据;
 如果用户输入exit，则打印退出程序，并退出 ;
 '''
+user_dict = {'xiao':(18,123),'xiaozhijian':(26,'17060******5')}
+while True:
+    opt = input("please input your operation:")
+    if opt == "delete":
+        user = input('please input user name:')
+        try:
+            user_dict.pop(user)
+        except KeyError as e:
+            print('{} user has not exist!'.format(user))
+    elif opt == "update":
+        u_age = input('please input ”user:age:tel”,with ":" separate.')
+        u_info = u_age.split(':')
+        u_name = u_info[0]
+        u_data = (u_info[1],u_info[2])
+        if u_name in user_dict.keys():
+            user_dict[u_name] = u_data
+        else:
+            print('{} user has not exist!'.format(u_name))
+
+    elif opt == "find":
+        user = input('please input user name:')
+        try:
+            print('user name is {}:'.format(user))
+            print('{} info is {}:'.format(user,user_dict[user]))
+        except KeyError as e:
+            print('{} user has not exist!'.format(user))
+    elif opt == 'list':
+        for u,d in user_dict.items():
+            print("user name is:{}".format(u))
+            print('user info is:{}'.format(d))
+    elif opt == "exit":
+        break
+    else:
+        break
