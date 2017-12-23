@@ -130,3 +130,67 @@ while True:
 用户验证修改为用户名和密码
 输入list后提示用户排序字段（name, age, tel），根据用户输入字段进行排序（升序）后将结果输入
 '''
+def PasswordMange(username):
+
+    user_list = {'xiao':''}
+    password = input('please input user password:').strip()
+    if username in user_list.keys():
+        if user_list[username].strip() != password:
+            for i in range(2):
+                if i <= 1:
+                    p = input("please input password again:").strip()
+                    if user_list[username].strip() == p:
+                        print("password is good")
+                        break
+                    else:
+                        print("password is mistake,one mone agin!")
+                else:
+                    exit()
+        else:
+            print("{} user password is  correct".format(username))
+            print("whether  are you set password again!!,now password is: {}".format('*'*len(user_list[username])))
+            c = input("please input yes or no:(y/n)").lower()
+            if c == "y":
+                pw = input("please input new password: ")
+                user_list[username] = pw
+    else:
+        print("{} user don't exist".format(username))
+        user_list[username] = ''
+        exit()
+
+while True:
+    username = input('please input username:')
+    PasswordMange(username)
+    opt = input("please input your operation:")
+    user_dict = {'xiao':(18,123),'xiaozhijian':(26,'17060******5')}
+    if opt == "delete":
+        user = input('please input user name:')
+        try:
+            user_dict.pop(user)
+        except KeyError as e:
+            print('{} user has not exist!'.format(user))
+    elif opt == "update":
+        u_age = input('please input ”user:age:tel”,with ":" separate.')
+        u_info = u_age.split(':')
+        u_name = u_info[0]
+        u_data = (u_info[1],u_info[2])
+        if u_name in user_dict.keys():
+            user_dict[u_name] = u_data
+        else:
+            print('{} user has not exist!'.format(u_name))
+
+    elif opt == "find":
+        user = input('please input user name:')
+        try:
+            print('user name is {}:'.format(user))
+            print('{} info is {}:'.format(user,user_dict[user]))
+        except KeyError as e:
+            print('{} user has not exist!'.format(user))
+    elif opt == 'list':
+        for u,d in user_dict.items():
+            print("user name is:{}".format(u))
+            print('user info is:{}'.format(d))
+    elif opt == "exit":
+        break
+    else:
+        break
