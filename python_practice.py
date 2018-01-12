@@ -86,7 +86,7 @@ print(Counter(strings).most_common(3))
 如果用户输入list，则打印所有用户信息;
 打印用户第一个行数据为用户信息描述，从第二行开始为用户数据;
 如果用户输入exit，则打印退出程序，并退出 ;
-'''
+
 user_dict = {'xiao':(18,123),'xiaozhijian':(26,'17060******5')}
 while True:
     opt = input("please input your operation:")
@@ -123,13 +123,13 @@ while True:
         break
 ####################################
 ## 第二周作业
- ''''
+
 在用户管理功能中添加密码信息:
 增、改添加用户密码输入
 显示时将用户密码显示为N(密码长度)个*
 用户验证修改为用户名和密码
 输入list后提示用户排序字段（name, age, tel），根据用户输入字段进行排序（升序）后将结果输入
-'''
+
 def PasswordMange(username):
 
     user_list = {'xiao':''}
@@ -195,3 +195,35 @@ while True:
     else:
         break
 #################################
+'''''
+###第五周作业
+'''
+1。实现一个timeit的装饰器：timeit 装饰能够计算被装饰函数的运行时间；
+2.实现一个缓存的装饰器：cache装饰器，缓存斐波那契数运行的结果，
+先检测要运行的斐波那契数是否在缓存里面，如果在直接返回结果，
+否则计算并发结果存在缓存里面，再返回结果。
+'''
+import datetime
+import time
+
+def timeit(fn):
+    def _timeit(*args,**kwargs):
+        start = datetime.datetime.now()
+        print('begin time is {}'.format(start))
+        wrapped = fn(*args,**kwargs)
+        delta = (datetime.datetime.now() - start).total_seconds()
+        print('function run time is {}'.format(delta))
+        return wrapped
+    return _timeit
+
+@timeit
+def fib(nums):
+    pre = 0
+    cur = 1
+    time.sleep(3)
+    for i in range(nums):
+        pre,cur = cur,pre + cur
+        print(cur,end=' ')
+    print()
+
+fib(6)
