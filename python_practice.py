@@ -202,14 +202,16 @@ while True:
 '''
 import datetime
 import time
+import functools
 
 def timeit(fn):
+    @functools.wraps(fn)
     def _timeit(*args,**kwargs):
         start = datetime.datetime.now()
         print('begin time is {}'.format(start))
         wrapped = fn(*args,**kwargs)
         delta = (datetime.datetime.now() - start).total_seconds()
-        print('function run time is {}'.format(delta))
+        print('function run time is {}s'.format(delta))
         return wrapped
     return _timeit
 
@@ -229,3 +231,4 @@ fib(6)
 先检测要运行的斐波那契数是否在缓存里面，如果在直接返回结果，
 否则计算并发结果存在缓存里面，再返回结果。
 '''
+
