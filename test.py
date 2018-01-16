@@ -1083,6 +1083,7 @@ print(add(4,5))
 '''
 ############### 第一月测试题 ###############
 ##第一题###################
+''''
 import random
 
 lst = []
@@ -1143,7 +1144,8 @@ for i in range(length):
     if i != maxindex:
         nums1[maxindex],nums1[i] = nums1[i],nums1[maxindex]
 print(nums1)
-
+#### 第八题 #########################
+'''
 
 
 
