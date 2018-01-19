@@ -826,6 +826,71 @@ for i in range(2,length):
         nums[j+1] = nums[0]  ####将哨兵位插入
 print(nums[1:])
 '''
+############### 第一月测试题 ###############
+##第一题###################
+''''
+import random
+
+lst = []
+s = list({5,10,3,8,6,10,9,15,24,30,27,48,24})
+for i in range(10):
+    a = random.choice(s)
+    if a % 3 == 0 and a %4 != 0:
+        lst.append(a)
+print(lst)
+print(sum(lst))
+
+########  第三题########
+matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
+
+tm = [[0 for row in range(len(matrix))] for col in range(len(matrix[0]))]
+for i in range(len(tm)):
+    for j in range(len(matrix)):
+        tm[i][j] = matrix[j][i]
+print(tm)
+
+########### 第四题 ##################
+import datetime
+
+dt = datetime.datetime.now().timestamp()
+a =   ['{}_{}_{}'.format(str(dt)[:10],''.join(str(random.randint(0,9)) for _ in range(3)),
+                         ''.join(chr(random.randint(97,122)) for j in range(8)))]
+print(a)
+################ 第五题 ################
+lst = [29,30,37,12,1,5,55,15,75,79,75,64,26,25,29,985,15,26,24,78,26,28,29,31,35,38,39,37,79,74,78,75,78,74,25,18,75,79]
+print(set(lst))
+k = []
+for i in lst:
+    if i not in k:
+        k.append(i)
+print(sorted(k))
+
+############### 第六题 #####################
+nums = [375,3.5,6,20,9,-20,68]
+length = len(nums)
+
+for i in range(length):
+    flag = False
+    for j in range(length - i - 1):
+        if nums[j] > nums[j +1]:
+            nums[j],nums[j+1] = nums[j+1],nums[j]
+            flag = True
+    if not flag:
+        break
+print(nums)
+########## 第七题 ##########################
+nums1 = [375,3.5,6,20,9,-20,68]
+length = len(nums1)
+for i in range(length):
+    maxindex = i
+    for j in range(i+1,length):
+        if nums1[maxindex] > nums1[j]:
+            maxindex = j
+    if i != maxindex:
+        nums1[maxindex],nums1[i] = nums1[i],nums1[maxindex]
+print(nums1)
+#### 第八题 #########################
+'''
 ############# 递归##########
 '''
 import datetime
@@ -1081,75 +1146,126 @@ def add(x:int,y:int = 7,*args) -> int:
 
 print(add(4,5))
 '''
-############### 第一月测试题 ###############
-##第一题###################
-''''
-import random
-
-lst = []
-s = list({5,10,3,8,6,10,9,15,24,30,27,48,24})
-for i in range(10):
-    a = random.choice(s)
-    if a % 3 == 0 and a %4 != 0:
-        lst.append(a)
-print(lst)
-print(sum(lst))
-
-########  第三题########
-matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
-
-tm = [[0 for row in range(len(matrix))] for col in range(len(matrix[0]))]
-for i in range(len(tm)):
-    for j in range(len(matrix)):
-        tm[i][j] = matrix[j][i]
-print(tm)
-
-########### 第四题 ##################
+################# cache 装饰器#######################
+# 缓冲buff 、缓存cache
+from functools import wraps
+import time
+import inspect
 import datetime
-
-dt = datetime.datetime.now().timestamp()
-a =   ['{}_{}_{}'.format(str(dt)[:10],''.join(str(random.randint(0,9)) for _ in range(3)),
-                         ''.join(chr(random.randint(97,122)) for j in range(8)))]
-print(a)
-################ 第五题 ################
-lst = [29,30,37,12,1,5,55,15,75,79,75,64,26,25,29,985,15,26,24,78,26,28,29,31,35,38,39,37,79,74,78,75,78,74,25,18,75,79]
-print(set(lst))
-k = []
-for i in lst:
-    if i not in k:
-        k.append(i)
-print(sorted(k))
-
-############### 第六题 #####################
-nums = [375,3.5,6,20,9,-20,68]
-length = len(nums)
-
-for i in range(length):
-    flag = False
-    for j in range(length - i - 1):
-        if nums[j] > nums[j +1]:
-            nums[j],nums[j+1] = nums[j+1],nums[j]
-            flag = True
-    if not flag:
-        break
-print(nums)
-########## 第七题 ##########################
-nums1 = [375,3.5,6,20,9,-20,68]
-length = len(nums1)
-for i in range(length):
-    maxindex = i
-    for j in range(i+1,length):
-        if nums1[maxindex] > nums1[j]:
-            maxindex = j
-    if i != maxindex:
-        nums1[maxindex],nums1[i] = nums1[i],nums1[maxindex]
-print(nums1)
-#### 第八题 #########################
 '''
+def m_cache(duration):
+    def _cache(fn):
+        local_cache = {}
+        @wraps(fn)
+        def wrapper(*args,**kwargs):
+    #        print(args,kwargs)
+            #判断local_cache 有没有过期的key,过期就清除
+            def clear_expire(cache):
+                expire_keys = []
+                for k, (_, timestamp) in cache.items():
+                    if datetime.datetime.now().timestamp() - timestamp > duration:
+                        expire_keys.append(k)
+                for k in expire_keys:
+                    cache.pop(k)
 
+            clear_expire(local_cache)
 
+            def make_key():
+                key_dict = {}   #排序用sorted
+                sig = inspect.signature(fn)
+                params = sig.parameters #有序字典
+                param_list = list(params.keys())
+                # 位置参数
+                for i,v in enumerate(args):
+        #            print(i,v)
+                    k = param_list[i]
+                    key_dict[k] = v
+                #关键字参数
+                #for k,v in kwargs.items():   等于下面的update
+                #   key_dict[k] = v
+                key_dict.update(kwargs)
+                #缺省值处理
+                for k in params.keys():
+                    if k not in key_dict.keys():
+                        key_dict[k] = params[k].default
 
+                return tuple(sorted(key_dict.items()))
 
+            ##生成key
+            key = make_key()
+            ## 判断key是否在local缓存中，如果在则输出缓存值，不在就存入缓存字典中
+            if key not in local_cache.keys():
+                ret = fn(*args,**kwargs)
+                local_cache[key] = (ret,datetime.datetime.now().timestamp())
+
+            return  local_cache[key]
+        return wrapper
+    return _cache
+
+def logger(fn):
+    @wraps(fn)
+    def wrapper(*args,**kwargs):
+        start = datetime.datetime.now()
+        ret = fn(*args,**kwargs)
+        delta = (datetime.datetime.now() - start).total_seconds()
+        print('run time is {}'.format(delta))
+        return ret
+    return wrapper
+
+@logger
+@m_cache(5)
+def add(x,y=5):
+    time.sleep(3)
+    ret = x + y
+    print(ret)
+    return ret
+
+add(4)
+add(4,5)
+add(x=4,y=5)
+
+time.sleep(6)
+
+add(4)
+add(4,5)
+add(x=4,y=5)
+'''
+#### 命令分发器#############
+
+def command_dispatcher():
+    command = {}
+    #注册函数
+    def register(name):
+        def _register(fn):
+            command[name] = fn
+            return fn
+        return _register
+    #缺省函数
+    def default_func():
+        print("Unkown command")
+    #调度器
+    def dispatcher():
+        while True:
+            cmd = input(">>>>")
+            if cmd.strip() == "":
+                return
+            command.get(cmd,default_func)()
+
+    return register,dispatcher
+
+register,dispatcher = command_dispatcher()
+
+#自定义函数
+@register('mag')
+def foo1():
+    print('magedu')
+
+@register('py')
+def foo2():
+    print('python')
+
+#调度循环
+dispatcher()
 
 
 
