@@ -77,7 +77,22 @@ add(4)
 add(4,5)
 add(x=4,y=5)
 '''
+#找出两个字符串中最长的公共子串###
+s1 = "abcdefg"
+s2 = "defabcdoabcdeftw"
+s3 = "1234a"
 
+def findit(str1,str2):
+    length = len(str1)
+
+    for sublen in range(length,0,-1):
+        for start in range(0,length - sublen + 1):
+            substr = str1[start:start + sublen]
+            if str2.find(substr) > -1:
+                print("substrlen={}".format(sublen))
+                return substr
+
+print(findit(s1,s2))
 
 
 
