@@ -1309,17 +1309,18 @@ def findit(str1,str2):
 
 print(findit(s1,s2))
 '''''
-## 堆排序 ############
+## 堆排序 ############              疑难点
+'''
 import math
 
 def print_tree(array):
-    '''
+    """
             前空格     元素间
     1         7         0
     2         3         7
     3         1         3
     4         0         1
-    '''
+    """
     index = 1
     depth = math.ceil(math.log2(len(array)))  #因为补0了,不然应该是math.ceil(math.log2(len(array)+1))
     sep = "  "
@@ -1378,8 +1379,43 @@ def sort(total,array:list):
 
 print_tree(sort(total,origin))
 print(origin)
+'''
+### 对一个文件，进行单词统计，不区分大小写，并显示单词重复最多的10个单词 ##############    疑难点
+def wordcount(file='e:\\sample.txt'):
+    chars = '''~!@#$$&*()_+{}[]|\\/"'=,:-<>'''
+    charset = set(chars)
+    with open(file,'r+',encoding="utf8") as f:
+        word_count = {}
+        for line in f:
+            words = line.split()
 
+#            for k,v in zip(words,(1,)*len(words)):
+            for k in words:
+                k = k.strip(chars)
+                if len(k) < 1:
+                    continue
+                k = k.lower()
+                start = 0
+                for i,c in enumerate(k):
+                    if c in charset:
+                        if start == i:
+                            start = i + 1
+                            continue
+                        key = k[start:i]
+                        word_count[k] = word_count.get(k,0) + 1
+                        start = i + 1
+                else:
+                    key = k[start:]
+                    word_count[k] = word_count.get(k,0) + 1
 
+    lst = sorted(word_count.items(),key=lambda x:x[1],reverse=True)
+    for i in range(10):
+        print("word is {} ,number is {}".format(lst[i][0],lst[i][1]))
+#        if i < len(lst):
+ #           print(str(lst[i:]).strip("'()").replace("'",""))
+
+    return lst
+wordcount()
 
 
 
