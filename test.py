@@ -1382,7 +1382,7 @@ print(origin)
 '''
 ### 对一个文件，进行单词统计，不区分大小写，并显示单词重复最多的10个单词 ##############    疑难"""
 """
-def wordcount(file='e:\\sample.txt'):
+def wordcount(file='sample.txt'):
     chars = '''~!@#$$&*()_+{}[]|\\/"'=,:-<>'''
     charset = set(chars)
     with open(file,'r+',encoding="utf8") as f:
