@@ -1380,7 +1380,8 @@ def sort(total,array:list):
 print_tree(sort(total,origin))
 print(origin)
 '''
-### 对一个文件，进行单词统计，不区分大小写，并显示单词重复最多的10个单词 ##############    疑难点
+### 对一个文件，进行单词统计，不区分大小写，并显示单词重复最多的10个单词 ##############    疑难"""
+"""
 def wordcount(file='e:\\sample.txt'):
     chars = '''~!@#$$&*()_+{}[]|\\/"'=,:-<>'''
     charset = set(chars)
@@ -1411,12 +1412,12 @@ def wordcount(file='e:\\sample.txt'):
     lst = sorted(word_count.items(),key=lambda x:x[1],reverse=True)
     for i in range(10):
         print("word is {} ,number is {}".format(lst[i][0],lst[i][1]))
-#        if i < len(lst):
- #           print(str(lst[i:]).strip("'()").replace("'",""))
+       # if i < len(lst):
+       #     print(str(lst[i:]).strip("'()").replace("'",""))
 
     return lst
 wordcount()
-
+"""
 
 
 

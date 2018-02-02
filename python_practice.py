@@ -203,7 +203,7 @@ while True:
 import datetime
 import time
 import functools
-
+'''
 def timeit(fn):
     @functools.wraps(fn)
     def _timeit(*args,**kwargs):
@@ -226,6 +226,7 @@ def fib(nums):
     print()
 
 fib(6)
+'''
 '''
 2.实现一个缓存的装饰器：cache装饰器，缓存斐波那契数运行的结果，
 先检测要运行的斐波那契数是否在缓存里面，如果在直接返回结果，
