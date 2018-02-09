@@ -1381,6 +1381,34 @@ print_tree(sort(total,origin))
 print(origin)
 '''
 ### 对一个文件，进行单词统计，不区分大小写，并显示单词重复最多的10个单词 ##############    疑难"""
+import re
+from collections import defaultdict
+
+regex = re.compile(r'[\W-]')
+d = defaultdict(lambda :0)
+
+with open('sample.txt') as f:
+    for line in f:
+        for x in regex.split(line):
+            if len(x) >= 1:
+                d[x.upper()] += 1
+
+print(d)
+
+def wordcount(path):
+    d = defaultdict(lambda :0)
+    with open(path,encoding='utf8') as f:
+        for line in f:
+            for x in regex.split(line):
+                if len(x) >= 1:
+                    d[x.lower()] += 1
+    return  d
+i = 0
+for x in sorted(wordcount('sample.txt').items(),key=lambda x:x[1],reverse=True):
+    if i < 10:
+        print(x)
+    i += 1
+
 """
 def wordcount(file='sample.txt'):
     chars = '''~!@#$$&*()_+{}[]|\\/"'=,:-<>'''
