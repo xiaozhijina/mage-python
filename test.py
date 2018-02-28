@@ -1396,6 +1396,7 @@ with open('sample.txt') as f:
 print(d)
 
 def wordcount(path):
+    regex = re.compile(r'[\W-]')
     d = defaultdict(lambda :0)
     with open(path,encoding='utf8') as f:
         for line in f:
