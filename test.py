@@ -1448,6 +1448,328 @@ def wordcount(file='sample.txt'):
     return lst
 wordcount()
 """
+## 模拟购物车购物  ##############
+'''
+class Color:
+    RED = 0
+    BULE = 1
+    GREEN = 2
+    GOLDEN = 3
+    BLACK = 4
+    OTHER = 1000
+
+class Item:
+    def __init__(self,**kwargs):
+        self.__spec = kwargs
+
+    def __repr__(self):
+        return str(sorted(self.__spec.items()))
+
+class Cart:
+    def __init__(self):
+        self.items = []
+
+    def additem(self,item:Item):
+        self.items.append(item)
+
+    def getallitem(self):
+        return self.items
+
+mycar = Cart()
+myitem = Item(mark='BMW',color=Color.BLACK,price='100w')
+mycar.additem(myitem)
+print(mycar.getallitem())
+'''
+#######类方法#########
+'''
+class Person:
+    @classmethod
+    def class_method(cls):
+        print('class = {0.__name__} ({0})'.format(cls))
+        cls.HEIGHT = 170
+
+Person.class_method()
+print(Person.__dict__)
+print(Person.HEIGHT)
+c = Person()
+print(c.HEIGHT)
+'''
+##########类的继承##############
+'''
+class Animal:
+    def __init__(self,name):
+        self._name = name
+
+    def shout(self):
+        print('{} shout'.format(self.__class__.__name__))
+
+#    @property
+    def name(self):
+        return self._name
+
+a = Animal('cat')
+a.shout()
+print(a.name())
+
+
+class Dog(Animal):ttp://tm.yue.uuyoyo.com/orderdetail.html
+    def __init__(self,name,color):
+        Animal.__init__(self,name)
+        self._color = color
+
+    def dogcolor(self):
+        return self._color
+
+dog = Dog('ahuang','black')
+print(dog.name())
+dog.shout()
+print(dog.dogcolor())
+'''
+###类的练习######################
+'''
+import json
+import msgpack
+
+class Shape:
+    def __init__(self):
+        print('a series of shape')
+
+class Triangle(Shape):
+    def __init__(self,floor,high):
+        super().__init__()
+        self.floor = floor
+        self.high = high
+    def t_area(self):
+        return (self.floor * self.high)/2
+
+class Rectangle(Shape):
+    def __init__(self,long,weight):
+        super().__init__()
+        self.long = long
+        self.weight = weight
+    def r_area(self):
+        return self.long * self.weight
+
+class Circle(Shape):
+    def __init__(self,r):
+        super().__init__()
+        self.r = r
+    def c_are(self):
+        return 3.14*(self.r**2)
+
+class SerializableMixin:
+    def dumps(self,t='json'):
+        if t == 'json':
+            print(self.__dict__)
+            return json.dumps(self.__dict__)
+        elif t == 'msgpack':
+            print(self.__dict__)
+            return msgpack.packb(self.__dict__)
+        else:
+            raise NotImplementedError('没有实现的序列化')
+class SerializableCircleMixin(SerializableMixin,Circle):
+    pass
+
+scm = SerializableCircleMixin(3)
+print(scm.c_are())
+s = scm.dumps('msgpack')
+print(s)
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~')
+c = Circle(3)
+print(c.c_are())
+r = Rectangle(2,3)
+print(r.r_area())
+'''
+##########实现ls命令功能。
+'''
+import argparse
+from pathlib import Path
+from datetime import datetime
+list()
+
+parser = argparse.ArgumentParser(prog='ls',add_help=False,description='list directory contents')
+parser.add_argument('path',nargs='?',default='.',help='path help')
+parser.add_argument('-l',dest='long',action='store_true',help='use a long listing format')
+parser.add_argument('-a','--all',action='store_true',help='show all files,do not ignore entires starting with .')
+parser.add_argument('-h','--human-readable',action='store_true',help='with -l,print sizes in human readable format ')
+
+def listdir(path,all=False,detail=False,human=False):
+    def _getfiletype(f:Path):
+        if f.is_dir():
+            return 'd'
+        elif f.is_block_device():
+            return 'b'
+        elif f.is_char_device():
+            return 'c'
+        elif f.is_socket():
+            return 's'
+        elif f.is_symlink():
+            return 'l'
+        elif f.is_fifo():
+            return  'p'
+        else:
+            return '-'
+
+# def convert_mode(mode:int):
+#     modelist = ['r','w','x','r','w','x','r','w','x']
+#     modestr = bin(mode)[-9:]  #'110110100'
+#     ret = ""
+#     for i,c in enumerate(modestr):
+#         if c == '1':
+#             ret += modelist[i]
+#         else:
+#             ret += '-'
+#     return ret
+
+    modelist = dict(zip(range(9),['r','w','x','r','w','x','r','w','x']))
+    def _getmodestr(mode:int):
+        m = mode & 0o777
+        mstr = ''
+        for i in range(8,-1,-1):
+            if m >> i & 1:
+                mstr += modelist[8-i]
+            else:
+                mstr += '-'
+        return mstr
+
+    def _gethuman(size:int):
+        units = ['','K','M','G','T','P']
+        depth = 0
+        while size >=1000:
+            size = size // 1000
+            depth += 1
+        return '{}{}'.format(size,units[depth])
+
+    def _listdir(path,all=False,detail=False,human=False):
+        """详细列出本目录"""
+        p = Path(path)
+        for i in p.iterdir():
+            if not all and i.name.startswith('.'):   #不显示隐藏文件
+                continue
+            if not detail:
+                yield (i.name,)
+            else:
+                stat = i.stat()
+    #            t = _getfiletype(p)
+    #            mode = oct(stat.st_mode)[-3:]
+                mode = _getfiletype(p) + _getmodestr(stat.st_mode)
+                actime = datetime.fromtimestamp(stat.st_atime).strftime('%Y-%m-%d %H:%M:%S')
+                size = str(stat.st_size) if  not human else _gethuman(stat.st_size)
+                yield (mode,stat.st_nlink,stat.st_gid,stat.st_uid,actime,size,i.name)
+
+    #排序
+    yield from sorted(_listdir(path,all,detail,human),key=lambda x:x[len(x) - 1])
+
+if __name__ == '__main__':
+    args = parser.parse_args(('-l','-a','-h'))    #分析参数，同时传入可迭代的参数
+    print(args)
+#    parser.print_help()
+#    print(args.all)
+#    print(args.human_readable)
+    files = listdir(args.path,args.all,args.long,args.human_readable)
+    for i in files:
+        print(i)
+'''
+###单向链表####
+'''
+class SingleNode:
+    def __init__(self,item,next=None):
+        self.item = item
+        self.next = next
+
+    def __repr__(self):
+        return repr(self.item)
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.items = []
+
+    def append(self,item):
+        node = SingleNode(item)
+        if self.head is None:
+            self.head = node
+        else:
+            self.tail.next = node
+        self.tail = node
+        self.items.append(node)
+
+    def iternodes(self):
+        current = self.head
+        while current:
+            yield current
+            current = current.next
+
+    def getitem(self,index):
+        return self.items[index]
+
+ll = LinkedList()
+ll.append('ab')
+ll.append(1)
+ll.append(2)
+ll.append('c')
+print(ll.head,ll.tail)
+
+for x in ll.iternodes():
+    print(x)
+
+print(ll.getitem(2))
+'''
+### Mixin类 ###########
+'''
+class PrintableMixin:
+    def print(self):
+        print(self.content,'Mixin')
+
+class Document:
+    def __init__(self,content):
+        self.content = content
+class Word(Document):
+    pass
+class Pdf(Document):
+    pass
+class PrintableWord(PrintableMixin,Word):
+    pass
+print(PrintableWord.__dict__)
+print(PrintableWord.mro())
+pw = PrintableWord('test string')
+pw.print()
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+class SuperPrintableMixin(PrintableMixin):
+    def print(self):
+        print('~'*10)
+        super().print()  ###通过继承复用
+        print('~'*10)
+class SuperPrintablePdf(SuperPrintableMixin,Pdf):
+     pass
+
+print(SuperPrintablePdf.__dict__)
+print(SuperPrintablePdf.mro())
+spp = SuperPrintablePdf('super print pdf')
+print(spp.__dict__)
+spp.print()
+'''
+import datetime
+import time
+from functools import wraps
+
+def timeit(fn):
+    @wraps(fn)
+    def wrapper(*args,**kwargs):
+        start = datetime.datetime.now()
+        ret = fn(*args,**kwargs)
+        delta = (datetime.datetime.now() - start).total_seconds()
+        print('{} took {}s'.format(fn.__name__,delta))
+        return ret
+    return wrapper
+
+
+
+
+
+
 
 
 
